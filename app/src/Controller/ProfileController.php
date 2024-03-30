@@ -109,6 +109,8 @@ class ProfileController extends AbstractController
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
         $profile->setPrivate($parameters['private']);
+        $this->entityManager->persist($profile);
+        $this->entityManager->flush();
         return new JsonResponse(["certified" => $profile->isCertified()], Response::HTTP_OK);
     }
 
@@ -121,6 +123,8 @@ class ProfileController extends AbstractController
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
         $profile->setCertified($parameters['certified']);
+        $this->entityManager->persist($profile);
+        $this->entityManager->flush();
         return new JsonResponse(["certified" => $profile->isCertified()], Response::HTTP_OK);
     }
 
@@ -133,6 +137,8 @@ class ProfileController extends AbstractController
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
         $profile->setDescription($parameters['description']);
+        $this->entityManager->persist($profile);
+        $this->entityManager->flush();
         return new JsonResponse(["description" => $profile->getDescription()], Response::HTTP_OK);
     }
 
@@ -145,6 +151,8 @@ class ProfileController extends AbstractController
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
         $profile->setAcceptedAgeGap($parameters['accepted_age_gap']);
+        $this->entityManager->persist($profile);
+        $this->entityManager->flush();
         return new JsonResponse(["accepted_age_gap" => $profile->getAcceptedAgeGap()], Response::HTTP_OK);
     }
 
@@ -157,6 +165,8 @@ class ProfileController extends AbstractController
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
         $profile->setAcceptedDistance($parameters['accepted_distance']);
+        $this->entityManager->persist($profile);
+        $this->entityManager->flush();
         return new JsonResponse(["accepted_distance" => $profile->getAcceptedDistance()], Response::HTTP_OK);
     }
 
@@ -169,6 +179,8 @@ class ProfileController extends AbstractController
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
         $profile->setTargetedGender($parameters['targeted_gender']);
+        $this->entityManager->persist($profile);
+        $this->entityManager->flush();
         return new JsonResponse(["targeted_gender" => $profile->getTargetedGender()], Response::HTTP_OK);
     }
 
@@ -181,6 +193,8 @@ class ProfileController extends AbstractController
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
         $profile->setFavoriteMusician($parameters['favorite_musician']);
+        $this->entityManager->persist($profile);
+        $this->entityManager->flush();
         return new JsonResponse(["favorite_musician" => $profile->getFavoriteMusician()], Response::HTTP_OK);
     }
 
@@ -193,6 +207,8 @@ class ProfileController extends AbstractController
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
         $profile->setFavoriteMusic($parameters['favorite_music']);
+        $this->entityManager->persist($profile);
+        $this->entityManager->flush();
         return new JsonResponse(["favorite_music" => $profile->getFavoriteMusic()], Response::HTTP_OK);
     }
 
@@ -205,6 +221,8 @@ class ProfileController extends AbstractController
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
         $profile->setFavoriteMusicStyle($parameters['favorite_style']);
+        $this->entityManager->persist($profile);
+        $this->entityManager->flush();
         return new JsonResponse(["favorite_style" => $profile->getFavoriteMusicStyle()], Response::HTTP_OK);
     }
 
