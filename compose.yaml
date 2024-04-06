@@ -2,7 +2,8 @@ version: '3.8'
 
 services:
 
-  symfony:
+  profile_management:
+    container_name: profile_management
     build:
       context: ./app
       dockerfile: Dockerfile
@@ -12,7 +13,8 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       SERVER_NAME: ${SERVER_NAME:-localhost}
     depends_on:
-      - database
+      database:
+        condition: service_healthy
 
   database:
     image: postgres:alpine3.19
@@ -25,3 +27,8 @@ services:
       POSTGRES_DB: ${DATABASE_NAME}
     ports:
       - "5432"
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}'"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

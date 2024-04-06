@@ -1,11 +1,12 @@
-version: '3.8'
+version: '3'
 
 services:
 
-  symfony:
+  profile_management:
     command: bash -c "cd /app
       && frankenphp run --config /etc/caddy/Caddyfile --watch
-      && symfony console d:m:m"
+      && symfony console d:m:m
+      && symfony console importmap:install"
     volumes:
       - ./app:/app
       - vendor:/app/vendor
