@@ -5,8 +5,7 @@ services:
   profile_management:
     command: sh -c "cd /app
       && symfony console d:m:m
-      && symfony console importmap:install"
-      && frankenphp run --config /etc/caddy/Caddyfile --watch
+      && frankenphp run --config /etc/caddy/Caddyfile --watch"
     volumes:
       - ./app:/app
       - vendor:/app/vendor:delegated
