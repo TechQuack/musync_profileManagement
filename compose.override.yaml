@@ -4,7 +4,8 @@ services:
 
   symfony:
     command: bash -c "cd /app
-      && frankenphp run --config /etc/caddy/Caddyfile --watch"
+      && frankenphp run --config /etc/caddy/Caddyfile --watch
+      && symfony console d:m:m"
     volumes:
       - ./app:/app
       - vendor:/app/vendor

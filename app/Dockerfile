@@ -37,12 +37,12 @@ WORKDIR /app
 COPY ../caddy/Caddyfile /etc/caddy/Caddyfile
 
 #Get the composer files
-#COPY composer.json composer.lock .env /app/
-#COPY bin/console /app/bin/
+COPY composer.json composer.lock .env /app/
+COPY bin/console /app/bin/
 
 #Composer dependencies
 ENV COMPOSER_ALLOW_SUPERUSER=1
-#RUN composer install
+RUN composer install
 
 
 #Copy the project files
