@@ -2,16 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\Parameters;
 use App\Entity\Picture;
 use App\Repository\PictureRepository;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class PictureController extends AbstractController
 {
@@ -54,5 +57,34 @@ class PictureController extends AbstractController
             $picturesList->add($picture);
         }
         return new JsonResponse(["picture" => $picturesList], Response::HTTP_OK);
+    }
+
+    #[Route('/picture/postPicture', name: 'app_picture_post_profile_picture', methods: ['POST'])]
+    public function postProfilePicture(Request $request, SluggerInterface $slugger) : Response
+    {
+        $picFile = $request->files->get("picture");
+        if($picFile == null) {
+            return new Response("picture file not found", Response::HTTP_NOT_FOUND);
+        }
+        $originalFilename = pathinfo($picFile->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeFilename = $slugger->slug($originalFilename);
+        $newFilename = $safeFilename.'-'.uniqid().'.';
+        try {
+            $picFile->move(Parameters::FILE_DIRECTORY, $newFilename);
+        } catch (FileException $e) {
+
+        }
+        $userParameter = $request->request->get('userId');
+        $user = $this->userRepository->findOneBy(["id" => $userParameter]);
+        if($user == null) {
+            return new Response("user not found", Response::HTTP_NOT_FOUND);
+        }
+        $profile = $user->getProfile();
+        $picture = new Picture();
+        $picture->setName($originalFilename);
+        $picture->setLink(Parameters::FILE_DIRECTORY . $newFilename);
+        $picture->setPostedDate(new \DateTime());
+        $picture->setProfile($profile);
+        return new JsonResponse(["picture" => $picture->getName()], Response::HTTP_OK);
     }
 }
