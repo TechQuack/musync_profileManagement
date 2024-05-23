@@ -86,6 +86,36 @@ class PictureController extends AbstractController
         $picture->setPostedDate(new \DateTime());
         $picture->setProfile($profile);
         $user->getProfile()->setProfilePicture($picture);
-        return new JsonResponse(["picture" => $newFilename], Response::HTTP_OK);
+        return new JsonResponse(["picture" => $picture->getLink()], Response::HTTP_OK);
+    }
+
+    #[Route('/picture/postUserPicture', name: 'app_picture_post_user_picture', methods: ['POST'])]
+    public function postUserPicture(Request $request, SluggerInterface $slugger) : Response
+    {
+        $picFile = $request->files->get("picture");
+        if($picFile == null) {
+            return new Response("picture file not found", Response::HTTP_NOT_FOUND);
+        }
+        $originalFilename = pathinfo($picFile->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeFilename = $slugger->slug($originalFilename);
+        $newFilename = $safeFilename.'-'.uniqid().'.'.$picFile->guessExtension();
+        try {
+            $picFile->move(Parameters::FILE_DIRECTORY, $newFilename);
+        } catch (FileException $e) {
+
+        }
+        $userParameter = $request->request->get('userId');
+        $user = $this->userRepository->findOneBy(["id" => $userParameter]);
+        if($user == null) {
+            return new Response("user not found", Response::HTTP_NOT_FOUND);
+        }
+        $profile = $user->getProfile();
+        $picture = new Picture();
+        $picture->setName($originalFilename);
+        $picture->setLink(Parameters::FILE_DIRECTORY . $newFilename);
+        $picture->setPostedDate(new \DateTime());
+        $picture->setProfile($profile);
+        $user->getProfile()->addPicture($picture);
+        return new JsonResponse(["picture" => $picture->getLink()], Response::HTTP_OK);
     }
 }
