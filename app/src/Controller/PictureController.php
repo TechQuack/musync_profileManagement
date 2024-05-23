@@ -68,7 +68,7 @@ class PictureController extends AbstractController
         }
         $originalFilename = pathinfo($picFile->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $slugger->slug($originalFilename);
-        $newFilename = $safeFilename.'-'.uniqid().'.';
+        $newFilename = $safeFilename.'-'.uniqid().'.'.$picFile->guessExtension();
         try {
             $picFile->move(Parameters::FILE_DIRECTORY, $newFilename);
         } catch (FileException $e) {
@@ -85,6 +85,7 @@ class PictureController extends AbstractController
         $picture->setLink(Parameters::FILE_DIRECTORY . $newFilename);
         $picture->setPostedDate(new \DateTime());
         $picture->setProfile($profile);
-        return new JsonResponse(["picture" => $picture->getName()], Response::HTTP_OK);
+        $user->getProfile()->setProfilePicture($picture);
+        return new JsonResponse(["picture" => $newFilename], Response::HTTP_OK);
     }
 }

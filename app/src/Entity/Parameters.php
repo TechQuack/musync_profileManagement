@@ -5,6 +5,6 @@ namespace App\Entity;
 interface Parameters
 {
 
-    const FILE_DIRECTORY = "Images";
+    const FILE_DIRECTORY = "./images";
 
 }
