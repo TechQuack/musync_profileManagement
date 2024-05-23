@@ -8,6 +8,7 @@ services:
       && frankenphp run --config /etc/caddy/Caddyfile --watch"
     volumes:
       - ./app:/app
+      - ./php.ini:/usr/local/etc/php/php.ini
       - vendor:/app/vendor:delegated
       - var:/app/var:delegated
 
