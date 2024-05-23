@@ -59,7 +59,7 @@ class UserController extends AbstractController
     #[Route('/user/{userId}/getLastName', name: 'app_user_get_last_name', methods: ['GET'])]
     public function getLastName(int $userId) : Response
     {
-        $user = $this->userRepository->findOneBy(["user_id" => $userId]);
+        $user = $this->userRepository->findOneBy(["id" => $userId]);
         if($user == null) {
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
@@ -69,7 +69,7 @@ class UserController extends AbstractController
     #[Route('/user/{userId}/getEmail', name: 'app_user_get_email', methods: ['GET'])]
     public function getEmail(int $userId) : Response
     {
-        $user = $this->userRepository->findOneBy(["user_id" => $userId]);
+        $user = $this->userRepository->findOneBy(["id" => $userId]);
         if($user == null) {
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
@@ -79,7 +79,7 @@ class UserController extends AbstractController
     #[Route('/user/{userId}/getBirthdate', name: 'app_user_get_birthdate', methods: ['GET'])]
     public function getBirthdate(int $userId) : Response
     {
-        $user = $this->userRepository->findOneBy(["user_id" => $userId]);
+        $user = $this->userRepository->findOneBy(["id" => $userId]);
         if($user == null) {
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
@@ -89,7 +89,7 @@ class UserController extends AbstractController
     #[Route('/user/{userId}/getGender', name: 'app_user_get_gender', methods: ['GET'])]
     public function getGender(int $userId) : Response
     {
-        $user = $this->userRepository->findOneBy(["user_id" => $userId]);
+        $user = $this->userRepository->findOneBy(["id" => $userId]);
         if($user == null) {
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
@@ -99,7 +99,7 @@ class UserController extends AbstractController
     #[Route('/user/{userId}/getSocialMedia', name: 'app_user_get_social_media', methods: ['GET'])]
     public function getSocialMedia(int $userId) : Response
     {
-        $user = $this->userRepository->findOneBy(["user_id" => $userId]);
+        $user = $this->userRepository->findOneBy(["id" => $userId]);
         if($user == null) {
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
@@ -131,14 +131,14 @@ class UserController extends AbstractController
         $user->setProfile($profile);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
-        return new JsonResponse(["user_id" => $user->getId()], Response::HTTP_OK);
+        return new JsonResponse(["id" => $user->getId()], Response::HTTP_OK);
     }
 
     #[Route('/user/PostFirstName', name: 'app_user_post_firstname', methods: ['POST'])]
     public function postFirstName(Request $request) : Response
     {
         $parameters = json_decode($request->getContent(), true);
-        $user = $this->userRepository->findOneBy(["user_id" => $parameters['userId']]);
+        $user = $this->userRepository->findOneBy(["id" => $parameters['userId']]);
         if($user == null) {
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
@@ -152,7 +152,7 @@ class UserController extends AbstractController
     public function postLastName(Request $request) : Response
     {
         $parameters = json_decode($request->getContent(), true);
-        $user = $this->userRepository->findOneBy(["user_id" => $parameters['userId']]);
+        $user = $this->userRepository->findOneBy(["id" => $parameters['userId']]);
         if($user == null) {
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
@@ -166,7 +166,7 @@ class UserController extends AbstractController
     public function postEmail(Request $request) : Response
     {
         $parameters = json_decode($request->getContent(), true);
-        $user = $this->userRepository->findOneBy(["user_id" => $parameters['userId']]);
+        $user = $this->userRepository->findOneBy(["id" => $parameters['userId']]);
         if($user == null) {
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
@@ -180,7 +180,7 @@ class UserController extends AbstractController
     public function postBirthdate(Request $request) : Response
     {
         $parameters = json_decode($request->getContent(), true);
-        $user = $this->userRepository->findOneBy(["user_id" => $parameters['userId']]);
+        $user = $this->userRepository->findOneBy(["id" => $parameters['userId']]);
         if($user == null) {
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
@@ -194,7 +194,7 @@ class UserController extends AbstractController
     public function postGender(Request $request) : Response
     {
         $parameters = json_decode($request->getContent(), true);
-        $user = $this->userRepository->findOneBy(["user_id" => $parameters['userId']]);
+        $user = $this->userRepository->findOneBy(["id" => $parameters['userId']]);
         if($user == null) {
             return new Response("user not found", Response::HTTP_NOT_FOUND);
         }
