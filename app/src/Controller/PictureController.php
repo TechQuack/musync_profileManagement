@@ -82,10 +82,13 @@ class PictureController extends AbstractController
         $profile = $user->getProfile();
         $picture = new Picture();
         $picture->setName($originalFilename);
-        $picture->setLink(Parameters::FILE_DIRECTORY . $newFilename);
+        $picture->setLink(Parameters::FILE_DIRECTORY . "/" . $newFilename);
         $picture->setPostedDate(new \DateTime());
         $picture->setProfile($profile);
+        $this->entityManager->persist($picture);
         $user->getProfile()->setProfilePicture($picture);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
         return new JsonResponse(["picture" => $picture->getLink()], Response::HTTP_OK);
     }
 
@@ -112,10 +115,30 @@ class PictureController extends AbstractController
         $profile = $user->getProfile();
         $picture = new Picture();
         $picture->setName($originalFilename);
-        $picture->setLink(Parameters::FILE_DIRECTORY . $newFilename);
+        $picture->setLink(Parameters::FILE_DIRECTORY . "/" . $newFilename);
         $picture->setPostedDate(new \DateTime());
         $picture->setProfile($profile);
+        $this->entityManager->persist($picture);
         $user->getProfile()->addPicture($picture);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
         return new JsonResponse(["picture" => $picture->getLink()], Response::HTTP_OK);
+    }
+
+    #[Route('/picture/deleteUserPicture/{userId}/{picName}', name: 'app_picture_delete_user_picture', methods: ['DELETE'])]
+    public function deleteUserPicture(int $userId, string $picName) : Response
+    {
+        $user = $this->userRepository->findOneBy(["id" => $userId]);
+        if($user == null) {
+            return new Response("user not found", Response::HTTP_NOT_FOUND);
+        }
+        $picture = $this->pictureRepository->findOneBy(['name' => $picName, 'profile' => $user->getProfile()]);
+        if($picture == null) {
+            return new Response("picture not found", Response::HTTP_NOT_FOUND);
+        }
+        $this->entityManager->remove($picture);
+        $this->entityManager->flush();
+        unlink($picture->getLink());
+        return new JsonResponse(["delete" => "success"], Response::HTTP_OK);
     }
 }
